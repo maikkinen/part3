@@ -53,7 +53,7 @@ const timestamp = Date.now() //tbc
 app.get('/', (req, res) => {
     console.log('timestamp', timestamp)
     res.send(
-        '<p>Phonebook has info for all Swedes +20 yrs old </p>',
+        '<p>Phonebook has info for all Swedes +30 yrs old </p>',
         )
 })
 
