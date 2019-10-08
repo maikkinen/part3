@@ -1,0 +1,19 @@
+{
+  "name": "puhelinbackend",
+  "version": "1.0.0",
+  "description": "HY Fullstack osa 3, puhelinluettelon backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js", 
+    "watch": "nodemon index.js",	
+    "test": "echo\"Error: no test specified dude\" && exit 1"
+  },
+  "author": "Mai",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}
