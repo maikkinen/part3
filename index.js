@@ -1,6 +1,8 @@
+
 //const http = require('http') //Noden sisäänrakennettu moduuli, määrittelee web-palvelimen
 const express = require('express')
 const app = express()
+const path = require('path')
 
 let persons = [
     {
@@ -47,14 +49,17 @@ const app = http.createServer((req, res) => {
     res.end(JSON.stringify(persons))
 })
 */
-const timestamp = Date.now() //tbc
+
+
+const timestamp = new Date() //tbc
 
 //tämä on route
 app.get('/', (req, res) => {
-    console.log('timestamp', timestamp)
-    res.send(
-        '<p>Phonebook has info for all Swedes +30 yrs old </p>',
-        )
+    //console.log('timestamp', timestamp)
+    //res.sendFile('index.html')
+    console.log("heres in get babe")
+    console.log("timestamp", timestamp)
+    res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
 })
 
 
@@ -79,3 +84,14 @@ const port = 3001
 app.listen(port, () => {
     console.log(`Server swimming thro port ${port}`)
 })
+
+/*
+const ShowInBrowser = () => {
+    return (
+        <div>
+            <p>Phonebook has info for {persons.size}</p>
+            <p>It's {timestamp} o'clock. </p>
+        </div>
+    )
+}
+*/
