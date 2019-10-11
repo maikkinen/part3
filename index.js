@@ -3,9 +3,13 @@
 const express = require('express')
 const app = express()
 const path = require('path')
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser') //tämä otus on middleware.
 
-app.use(bodyParser.json())
+app.use(bodyParser.json()) 
+/*
+    Middlewaret otetaan käyttöön just siin järkäs jossa ne on kirjoitettu.
+    Ne tulee myös ottaa käyttöön ennen routeja, jos ne halutaan suorittaa ennen routeja.
+*/
 
 let persons = [
     {
@@ -45,8 +49,6 @@ let persons = [
 
     }
 ]
-
-const generateRandId = () => Math.floor(Math.random() * 1000)
 
 //tämä on route
 app.get('/', (req, res) => {
