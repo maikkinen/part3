@@ -1,1 +1,7 @@
-PUT  http://localhost:3001/persons
+POST  http://localhost:3001/persons
+Content-Type: application/json
+
+{
+    "name": "Anna Autiomaakettu",
+    "number": "+01 45 3344 12"
+}

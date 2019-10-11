@@ -3,6 +3,9 @@
 const express = require('express')
 const app = express()
 const path = require('path')
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons = [
     {
@@ -85,6 +88,25 @@ app.delete('/persons/:id', (req, res) => {
     persons = persons.filter(person => person.id !== id)
 
     res.status(204).end()
+})
+
+app.post('/persons', (req, res) => {
+    //Define id.
+    const maxId = persons.length > 0
+        ? Math.max(...persons.map(n => n.id))
+        : 0
+
+
+    const person = req.body
+    person.id = Math.floor(Math.random() * 1000)
+
+
+    console.log("dis is d nuu piipul ", person)
+    console.log("headers are: ", req.headers)
+    
+    persons = persons.concat(person)
+
+    res.json(person)
 })
 
 const port = 3001
