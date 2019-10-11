@@ -46,22 +46,10 @@ let persons = [
     }
 ]
 
-/*
-const app = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'application/json'})
-    res.end(JSON.stringify(persons))
-})
-*/
-
-
-const timestamp = new Date() //tbc
+const generateRandId = () => Math.floor(Math.random() * 1000)
 
 //tämä on route
 app.get('/', (req, res) => {
-    //console.log('timestamp', timestamp)
-    //res.sendFile('index.html')
-    console.log("heres in get babe")
-    console.log("timestamp", timestamp)
     res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
 })
 
@@ -91,19 +79,31 @@ app.delete('/persons/:id', (req, res) => {
 })
 
 app.post('/persons', (req, res) => {
-    //Define id.
-    const maxId = persons.length > 0
-        ? Math.max(...persons.map(n => n.id))
-        : 0
+    const name = req.body.name
+    const number = req.body.number
+    const mappedNames = persons.map(dude => dude.name)
+    
+    console.log("heres4", req.body)
+    console.log(mappedNames)
+    //console.log(body.number)
+    
+    if(!name || !number) {
+        return res.status(400).json({
+            error: 'content missing dude'
+        })
+    } else if(persons.map(dude => dude.name).includes(name)) {
+        return res.status(400).json({
+            error: 'please, give a unique name'
+        })
+    }
 
-
-    const person = req.body
-    person.id = Math.floor(Math.random() * 1000)
-
+    const person = {
+        name: name,
+        number: number,
+        id: Math.floor(Math.random() * 1000)
+    }
 
     console.log("dis is d nuu piipul ", person)
-    console.log("headers are: ", req.headers)
-    
     persons = persons.concat(person)
 
     res.json(person)
@@ -113,16 +113,3 @@ const port = 3001
 app.listen(port, () => {
     console.log(`Server swimming thro port ${port}`)
 })
-
-
-
-/*
-const ShowInBrowser = () => {
-    return (
-        <div>
-            <p>Phonebook has info for {persons.size}</p>
-            <p>It's {timestamp} o'clock. </p>
-        </div>
-    )
-}
-*/
