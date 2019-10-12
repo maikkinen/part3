@@ -65,7 +65,6 @@ app.get('/', (req, res) => {
 //tämä on route
 app.get('/', (req, res) => {
     console.log("sup gorgeous")
-    //morgan('tiny')
     res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
 })
 
@@ -91,7 +90,6 @@ app.get('/persons/:id', (req, res) => {
 app.delete('/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
-    morgan('tiny')
     console.log("tiny tiny indeeds babe")
     res.status(204).end()
 })
