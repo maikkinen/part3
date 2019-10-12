@@ -4,8 +4,14 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const bodyParser = require('body-parser') //tämä otus on middleware.
+const morgan = require('morgan')          //toinen otus.
+
 
 app.use(bodyParser.json()) 
+app.use(morgan('tiny'))
+
+const timestamp = new Date()
+
 /*
     Middlewaret otetaan käyttöön just siin järkäs jossa ne on kirjoitettu.
     Ne tulee myös ottaa käyttöön ennen routeja, jos ne halutaan suorittaa ennen routeja.
@@ -49,15 +55,24 @@ let persons = [
 
     }
 ]
+/*
+app.get('/', (req, res) => {
+    console.log("i like ice cream")
+    res.send('hello world')
+})
+*/
 
 //tämä on route
 app.get('/', (req, res) => {
+    console.log("sup gorgeous")
+    //morgan('tiny')
     res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
 })
 
 
 //tämä on route, ja myös tapahtumankäsittelijä, they say
 app.get('/persons', (req, res) => {
+    console.log("not much handsome")
     res.json(persons)
 })
 
@@ -76,7 +91,8 @@ app.get('/persons/:id', (req, res) => {
 app.delete('/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
-
+    morgan('tiny')
+    console.log("tiny tiny indeeds babe")
     res.status(204).end()
 })
 
