@@ -4,7 +4,8 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const bodyParser = require('body-parser') //tämä otus on middleware.
-const morgan = require('morgan')          //toinen otus.
+const morgan = require('morgan')          //toinen samanmoinen middleware-otus.
+const cors = require('cors') // mitä nää require('jotain')-otukset itse asiassa on?
 
 morgan.token('type', (req, res) => { return JSON.stringify(req.body.name)}) //console.log(JSON.stringify(req.body.number))  <-- tulee tekstiä ulos
 
