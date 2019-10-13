@@ -6,9 +6,22 @@ const path = require('path')
 const bodyParser = require('body-parser') //tämä otus on middleware.
 const morgan = require('morgan')          //toinen otus.
 
+morgan.token('type', (req, res) => { return JSON.stringify(req.body.name)}) //console.log(JSON.stringify(req.body.number))  <-- tulee tekstiä ulos
+
 
 app.use(bodyParser.json()) 
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :req[type] :res[content-length] - :response-time ms ')) //oli: 'tiny'
+
+// pitää varmaan käyttää req koska esim POST tehtäessä meillä on se person-objecti requestissa
+// morgan.token('type', function (req, res) { return req.headers['content-type'] })
+// replace 'type' w/name, ja req.headers --> jollain mitä haluut näyttää.
+
+
+// jos haluat conffata uuden morganin, joka näyttää tinyn lisäksi myös js objektin kenttineen
+// dvs myös person name, number, id, niin makes sense että pit käyt json.stringify()
+// koska muuten ej varmaan tajuu.
+
+// "json.stringify() converts a JS object or value to a JSON string.""
 
 const timestamp = new Date()
 
@@ -101,7 +114,6 @@ app.post('/persons', (req, res) => {
     
     console.log("heres4", req.body)
     console.log(mappedNames)
-    //console.log(body.number)
     
     if(!name || !number) {
         return res.status(400).json({

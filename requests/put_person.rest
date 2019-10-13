@@ -2,6 +2,6 @@ POST  http://localhost:3001/persons
 Content-Type: application/json
 
 {
-    "name": "Paavo Sininen",
-    "number": "+05 564 45 45 45"
+    "name": "Leevi Lehtokurppa",
+    "number": "+109 3380-0-0 00877"
 }
