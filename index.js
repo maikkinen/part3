@@ -138,7 +138,7 @@ app.post('/persons', (req, res) => {
     res.json(person)
 })
 
-const port = 3001
+const PORT = process.env.PORT || 3001
 app.listen(port, () => {
-    console.log(`Server swimming thro port ${port}`)
+    console.log(`Server swimming thro port ${PORT}`)
 })
