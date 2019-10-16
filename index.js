@@ -12,6 +12,7 @@ morgan.token('type', (req, res) => { return JSON.stringify(req.body.name)}) //co
 
 app.use(bodyParser.json()) 
 app.use(morgan(':method :url :status :req[type] :res[content-length] - :response-time ms ')) //oli: 'tiny'
+app.use(express.static('build'))
 
 // pitää varmaan käyttää req koska esim POST tehtäessä meillä on se person-objecti requestissa
 // morgan.token('type', function (req, res) { return req.headers['content-type'] })
