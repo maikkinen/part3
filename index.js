@@ -78,20 +78,20 @@ app.get('/', (req, res) => {
 */
 
 //tämä on route
-app.get('/', (req, res) => {
+app.get('/api/persons', (req, res) => {
     console.log("sup gorgeous")
     res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
 })
 
 
 //tämä on route, ja myös tapahtumankäsittelijä, they say
-app.get('/persons', (req, res) => {
+app.get('/api/persons', (req, res) => {
     console.log("not much handsome")
     res.json(persons)
 })
 
 //tämä on route, joka mahdollistaa yksittäisen resurssin katsomisen.
-app.get('/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)    //muuttaa tyypin String --> Number
     const person = persons.find(person => person.id === id)
    
@@ -102,14 +102,14 @@ app.get('/persons/:id', (req, res) => {
     }    
 })
 
-app.delete('/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
     console.log("tiny tiny indeeds babe")
     res.status(204).end()
 })
 
-app.post('/persons', (req, res) => {
+app.post('/api/persons', (req, res) => {
     const name = req.body.name
     const number = req.body.number
     const mappedNames = persons.map(dude => dude.name)
