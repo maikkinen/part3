@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js",
-    "test": "echo\"Error: no test specified dude\" && exit 1"
+    "test": "echo\"Error: no test specified dude\" && exit 1",
+    "build:ui": "rm -rf build && cd ../part2/puhelinluettelo && npm run build --prod && cp -r build ../../part3/",
+    "deploy" : "git push telefonbackend Teht_2.3:master",
+    "deploy:full": "npm run build:ui && git add . && git commmit -m uibuild && git push && npm run deploy",
+    "logs:prod": "telefonbackend logs --tail"	
   },
   "author": "Mai",
   "license": "ISC",
