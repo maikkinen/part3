@@ -1,40 +1,19 @@
 
 //const http = require('http') //Noden sisäänrakennettu moduuli, määrittelee web-palvelimen
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const path = require('path')
 const bodyParser = require('body-parser') //tämä otus on middleware.
 const morgan = require('morgan')          //toinen samanmoinen middleware-otus.
-const cors = require('cors') // mitä nää require('jotain')-otukset itse asiassa on?
 const mongoose = require('mongoose')
+const Contact = require('./models/contact')
 
 morgan.token('type', (req, res) => { return JSON.stringify(req.body.name)}) //console.log(JSON.stringify(req.body.number))  <-- tulee tekstiä ulos
 
 app.use(bodyParser.json()) 
 app.use(morgan(':method :url :status :req[type] :res[content-length] - :response-time ms ')) //oli: 'tiny'
 app.use(express.static('build'))
-
-//lets mongoose'n roll.
-const url =
-    `mongodb+srv://Sintti-Clusteroid:4HisGlory@closterud-bchpd.mongodb.net/telefonbackend?retryWrites=true&w=majority`
-
-mongoose.connect(url, { useNewUrlParser: true })
-
-const contactSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-  id: Number,
-})
-
-contactSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-    }
-})
-
-const Contact = mongoose.model('Contact', contactSchema)
 
 
 const timestamp = new Date()
@@ -92,29 +71,25 @@ app.get('/api/persons', (req, res) => {
 //tämä on route, joka mahdollistaa yksittäisen resurssin katsomisen.
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)    //muuttaa tyypin String --> Number
-    const person = persons.find(person => person.id === id)
+    Contact.findById(req.params.id).then(person => { 
    
-    if (person) {   //JS-olio on vertailuoperaatiossa truthy! 
-        res.json(person)
-    } else {        //'undefined' on vastaavasti falsy!
-        res.status(404).end()
-    }    
+     if (person) {   //JS-olio on vertailuoperaatiossa truthy! 
+            res.json(person)
+        } else {        //'undefined' on vastaavasti falsy!
+            res.status(404).end()
+        }    
+    })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
-    console.log("tiny tiny indeeds babe")
     res.status(204).end()
 })
 
 app.post('/api/persons', (req, res) => {
     const name = req.body.name
     const number = req.body.number
-    const mappedNames = persons.map(dude => dude.name)
-    
-    console.log("heres4", req.body)
-    console.log(mappedNames)
     
     if(!name || !number) {
         return res.status(400).json({
@@ -126,19 +101,21 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    const person = {
+    const person = new Contact({ //<---tämä on konstruktorifunktio
         name: name,
         number: number,
-        id: Math.floor(Math.random() * 1000)
-    }
+        id: Math.floor(Math.random() * 10000)
+    })
 
-    console.log("dis is d nuu piipul ", person)
-    persons = persons.concat(person)
+    person.save().then(savedPerson => {
+        res.json(savedPerson.toJSON())
+    })
+    //persons = persons.concat(person)
 
-    res.json(person)
+    //res.json(person)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server swimming thro port ${PORT}`)
 })

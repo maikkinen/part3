@@ -21,7 +21,6 @@ const contactSchema = new mongoose.Schema({
   id: Number,
 })
 
-//konventio: skeemassa yksikkö (contact) määrittyy Mongoose-kokoelmissa monikkona (contacts)
 const Contact = mongoose.model('Contact', contactSchema)
 
 if (!process.argv[3]) {
