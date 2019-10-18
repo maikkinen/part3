@@ -8,15 +8,16 @@
     "watch": "nodemon index.js",
     "test": "echo\"Error: no test specified dude\" && exit 1",
     "build:ui": "rm -rf build && cd ../part2/puhelinluettelo && npm run build --prod && cp -r build ../../part3/",
-    "deploy" : "git push telefonbackend Teht_3.2:master",
+    "deploy": "git push telefonbackend Teht_3.2:master",
     "deploy:full": "npm run build:ui && git add . && git commmit -m uibuild && git push && npm run deploy",
-    "logs:prod": "telefonbackend logs --tail"	
+    "logs:prod": "telefonbackend logs --tail"
   },
   "author": "Mai",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "react": "^16.10.2",
     "react-live-clock": "^3.1.0"

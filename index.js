@@ -6,31 +6,38 @@ const path = require('path')
 const bodyParser = require('body-parser') //tämä otus on middleware.
 const morgan = require('morgan')          //toinen samanmoinen middleware-otus.
 const cors = require('cors') // mitä nää require('jotain')-otukset itse asiassa on?
+const mongoose = require('mongoose')
 
 morgan.token('type', (req, res) => { return JSON.stringify(req.body.name)}) //console.log(JSON.stringify(req.body.number))  <-- tulee tekstiä ulos
-
 
 app.use(bodyParser.json()) 
 app.use(morgan(':method :url :status :req[type] :res[content-length] - :response-time ms ')) //oli: 'tiny'
 app.use(express.static('build'))
 
-// pitää varmaan käyttää req koska esim POST tehtäessä meillä on se person-objecti requestissa
-// morgan.token('type', function (req, res) { return req.headers['content-type'] })
-// replace 'type' w/name, ja req.headers --> jollain mitä haluut näyttää.
+//lets mongoose'n roll.
+const url =
+    `mongodb+srv://Sintti-Clusteroid:4HisGlory@closterud-bchpd.mongodb.net/telefonbackend?retryWrites=true&w=majority`
 
+mongoose.connect(url, { useNewUrlParser: true })
 
-// jos haluat conffata uuden morganin, joka näyttää tinyn lisäksi myös js objektin kenttineen
-// dvs myös person name, number, id, niin makes sense että pit käyt json.stringify()
-// koska muuten ej varmaan tajuu.
+const contactSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+  id: Number,
+})
 
-// "json.stringify() converts a JS object or value to a JSON string.""
+contactSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    }
+})
+
+const Contact = mongoose.model('Contact', contactSchema)
+
 
 const timestamp = new Date()
-
-/*
-    Middlewaret otetaan käyttöön just siin järkäs jossa ne on kirjoitettu.
-    Ne tulee myös ottaa käyttöön ennen routeja, jos ne halutaan suorittaa ennen routeja.
-*/
 
 let persons = [
     {
@@ -70,24 +77,16 @@ let persons = [
 
     }
 ]
-/*
-app.get('/', (req, res) => {
-    console.log("i like ice cream")
-    res.send('hello world')
-})
-*/
 
-//tämä on route
-app.get('/api/persons', (req, res) => {
+app.get('/info', (req, res) => {
     console.log("sup gorgeous")
     res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
 })
 
-
-//tämä on route, ja myös tapahtumankäsittelijä, they say
 app.get('/api/persons', (req, res) => {
-    console.log("not much handsome")
-    res.json(persons)
+    Contact.find({}).then(contacts => {
+        res.json(contacts.map(contact => contact.toJSON())) //persons tai people
+    });
 })
 
 //tämä on route, joka mahdollistaa yksittäisen resurssin katsomisen.
