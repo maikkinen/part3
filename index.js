@@ -69,22 +69,25 @@ app.get('/api/persons', (req, res) => {
 })
 
 //tämä on route, joka mahdollistaa yksittäisen resurssin katsomisen.
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     const id = Number(req.params.id)    //muuttaa tyypin String --> Number
-    Contact.findById(req.params.id).then(person => { 
-   
-     if (person) {   //JS-olio on vertailuoperaatiossa truthy! 
-            res.json(person)
-        } else {        //'undefined' on vastaavasti falsy!
-            res.status(404).end()
-        }    
-    })
+    Contact.findById(req.params.id)
+    .then(person => { 
+        if (person) {   //JS-olio on vertailuoperaatiossa truthy! 
+                res.json(person.toJSON())
+            } else {        //'undefined' on vastaavasti falsy!
+                res.status(404).end()
+            }    
+        })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(person => person.id !== id)
-    res.status(204).end()
+app.delete('/api/persons/:id', (req, response, next) => {
+    Contact.findByIdAndRemove(req.params.id)
+    .then(result => {
+        response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
