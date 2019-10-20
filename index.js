@@ -11,9 +11,10 @@ const Contact = require('./models/contact')
 
 morgan.token('type', (req, res) => { return JSON.stringify(req.body.name)}) //console.log(JSON.stringify(req.body.number))  <-- tulee tekstiä ulos
 
+app.use(express.static('build'))
 app.use(bodyParser.json()) 
 app.use(morgan(':method :url :status :req[type] :res[content-length] - :response-time ms ')) //oli: 'tiny'
-app.use(express.static('build'))
+
 
 
 const timestamp = new Date()
@@ -113,10 +114,48 @@ app.post('/api/persons', (req, res) => {
     person.save().then(savedPerson => {
         res.json(savedPerson.toJSON())
     })
-    //persons = persons.concat(person)
-
-    //res.json(person)
 })
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+
+    console.log(req.body.name)
+    console.log(req.body.number)
+    console.log(req.body.id)
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: req.body.id
+    }
+
+    Contact.findByIdAndUpdate(req.params.id, person, { new: true })
+        .then(updatedContact => {
+            res.json(updatedContact.toJSON())
+        })
+        .catch(error => next(error))
+})
+
+//tääl händlätään olemattomat osoitteet
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({ error: 'wuut endpoint is that dude?!' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    
+    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+        return response.status(400).send({ error: 'wuuuut id is that dude?!?'})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
+///JATKA TÄÄLTÄ HONEY HOT U AWESOME <3<3<3<3
+// tsekkaa beibi että mis järkäs pitäis olla ja mis kohtaa portti confii 
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
