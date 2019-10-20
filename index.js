@@ -94,7 +94,7 @@ app.delete('/api/persons/:id', (req, response, next) => {
 app.post('/api/persons', (req, res) => {
     const name = req.body.name
     const number = req.body.number
-    
+
     if(!name || !number) {
         return res.status(400).json({
             error: 'content missing dude'
