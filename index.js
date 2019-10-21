@@ -8,14 +8,13 @@ const bodyParser = require('body-parser') //tämä otus on middleware.
 const morgan = require('morgan')          //toinen samanmoinen middleware-otus.
 const mongoose = require('mongoose')
 const Contact = require('./models/contact')
+const uniqueValidator = require('mongoose-unique-validator')
 
 morgan.token('type', (req, res) => { return JSON.stringify(req.body.name)}) //console.log(JSON.stringify(req.body.number))  <-- tulee tekstiä ulos
 
 app.use(express.static('build'))
 app.use(bodyParser.json()) 
 app.use(morgan(':method :url :status :req[type] :res[content-length] - :response-time ms ')) //oli: 'tiny'
-
-
 
 const timestamp = new Date()
 
@@ -91,7 +90,7 @@ app.delete('/api/persons/:id', (req, response, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const name = req.body.name
     const number = req.body.number
 
@@ -111,9 +110,11 @@ app.post('/api/persons', (req, res) => {
         id: Math.floor(Math.random() * 10000)
     })
 
-    person.save().then(savedPerson => {
+    person.save()
+        .then(savedPerson => {
         res.json(savedPerson.toJSON())
     })
+    .catch(error => next(error))   
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
@@ -133,7 +134,10 @@ app.put('/api/persons/:id', (req, res, next) => {
         .then(updatedContact => {
             res.json(updatedContact.toJSON())
         })
-        .catch(error => next(error))
+        .catch(error => {
+            next(error)
+            console.log(error.response.data)
+        })
 })
 
 //tääl händlätään olemattomat osoitteet
@@ -148,14 +152,14 @@ const errorHandler = (error, request, response, next) => {
     
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
         return response.status(400).send({ error: 'wuuuut id is that dude?!?'})
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
     }
 
     next(error)
 }
 
 app.use(errorHandler)
-///JATKA TÄÄLTÄ HONEY HOT U AWESOME <3<3<3<3
-// tsekkaa beibi että mis järkäs pitäis olla ja mis kohtaa portti confii 
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

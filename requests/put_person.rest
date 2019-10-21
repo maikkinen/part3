@@ -2,6 +2,6 @@ PUT  http://localhost:3001/api/persons/5dac032f4ada282b5489bd18
 Content-Type: application/json
 
 {
-    "name": "Dooris Dooriskoira",
-    "number": "+456 234 123 2345"
+    "name": "",
+    "number": ""
 }

@@ -2,7 +2,7 @@ POST  http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Dooris Dooriskoira",
-    "number": "",
+    "name": "Paavo Kukkakuoriainen",
+    "number": "+50 5566 234 234",
     "id": ""
 }
