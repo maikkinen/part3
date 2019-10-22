@@ -1,11 +1,9 @@
-
 //const http = require('http') //Noden sisäänrakennettu moduuli, määrittelee web-palvelimen
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const path = require('path')
-const bodyParser = require('body-parser') //tämä otus on middleware.
-const morgan = require('morgan')          //toinen samanmoinen middleware-otus.
+const bodyParser = require('body-parser')
+const morgan = require('morgan')
 const mongoose = require('mongoose')
 const Contact = require('./models/contact')
 const uniqueValidator = require('mongoose-unique-validator')
@@ -19,53 +17,47 @@ app.use(morgan(':method :url :status :req[type] :res[content-length] - :response
 const timestamp = new Date()
 
 let persons = [
-    {
-        id: 1,
-        name:"Maija Mehiläinen",
-        number:"+456 789 6789" 
+{
+    id: 1,
+    name: "Maija Mehiläinen",
+    number: "+456 789 6789" 
+},
+{
+    id: 2,
+    name: "Onni Orava",
+    number: "+345 11 2345" 
+},
+{
+    id: 3,
+    name: "Liisa Lokki",
+    number: "+98 674 34534" 
 
-    },
-    {
-        id: 2,
-        name:"Onni Orava",
-        number:"+345 11 2345" 
-
-    },
-    {
-        id: 3,
-        name:"Liisa Lokki",
-        number:"+98 674 34534" 
-
-    },
-    {
-        id: 4,
-        name:"Elli Elefantti",
-        number:"+34 345 345 1111" 
-
-    },
-    {
-        id: 5,
-        name:"Kaisa Kuoriainen",
-        number:"+01 1243 2345 55" 
-
-    },
-    {
-        id: 6,
-        name:"Antero Antiluuppi",
-        number:"+123 123 123 444 12" 
-
-    }
+},
+{
+    id: 4,
+    name: "Elli Elefantti",
+    number: "+34 345 345 1111" 
+},
+{
+    id: 5,
+    name: "Kaisa Kuoriainen",
+    number: "+01 1243 2345 55" 
+},
+{
+    id: 6,
+    name: "Antero Antiluuppi",
+    number: "+123 123 123 444 12" 
+}
 ]
-
 app.get('/info', (req, res) => {
-    console.log("sup gorgeous")
-    res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
+  console.log("sup gorgeous")
+  res.send(`Phonebook has info for ${persons.length} piipul, and it's ${timestamp} today.`)
 })
 
 app.get('/api/persons', (req, res) => {
-    Contact.find({}).then(contacts => {
-        res.json(contacts.map(contact => contact.toJSON())) //persons tai people
-    });
+  Contact.find({}).then(contacts => {
+  res.json(contacts.map(contact => contact.toJSON())) //persons tai people
+  });
 })
 
 //tämä on route, joka mahdollistaa yksittäisen resurssin katsomisen.

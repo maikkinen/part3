@@ -10,7 +10,8 @@
     "build:ui": "rm -rf build && cd ../part2/puhelinluettelo && npm run build --prod && cp -r build ../../part3/",
     "deploy": "git push telefonbackend Teht_3.2:master",
     "deploy:full": "npm run build:ui && git add . && git commmit -m uibuild && git push && npm run deploy",
-    "logs:prod": "telefonbackend logs --tail"
+    "logs:prod": "telefonbackend logs --tail",
+    "lint": "eslint ."	
   },
   "author": "Mai",
   "license": "ISC",
@@ -25,6 +26,7 @@
     "react-live-clock": "^3.1.0"
   },
   "devDependencies": {
+    "eslint": "^6.5.1",
     "nodemon": "^1.19.3"
   }
 }
